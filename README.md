@@ -1,2 +1,2 @@
 # crio-templates-styles-companion
-Crio Templates and Styles Companion
+Child theme-like overrides and style control for BoldGrid Crio
