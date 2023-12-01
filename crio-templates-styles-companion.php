@@ -7,6 +7,12 @@ Version: 0.0.1
 */
 
 /*
+* Main Plugin Path
+* Note that there is no trailing slash
+*/
+define('CTSC_PATH', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
+
+/*
 * Debug mode
 * Change value below to 'true' to output debug dumps
 */
@@ -36,7 +42,7 @@ define('CTSC_STYLES', $ctsc_custom_styles);
 */
 function ctsc_enqueue_custom_styles() {
     
-    $plugin_path  = untrailingslashit( plugin_dir_url( __FILE__ ) )  . '/css/';
+    $plugin_path  = CTSC_PATH . '/css/';
     if(CTSC_DEBUG){ctsc_debug_dump($plugin_path);}
     if(CTSC_DEBUG){ctsc_debug_dump(CTSC_STYLES);}
     foreach(CTSC_STYLES as $custom_style){
@@ -46,13 +52,40 @@ function ctsc_enqueue_custom_styles() {
 }
 add_action( 'wp_enqueue_scripts', 'ctsc_enqueue_custom_styles');
 
+/* #################### JS Scripts #################### */
+
+/*
+* JS Script List
+* Array of JS files to enqueue
+* add new css file to '/js/' directory, to activate the css file add the file name to the list below (do not include .js extension)
+*/
+$ctsc_custom_scripts = array(
+    'my_scripts' , 
+);
+define('CTSC_SCRIPTS', $ctsc_custom_scripts);
+
+/*
+* Enqueue Custom JS Scripts
+*/
+function ctsc_enqueue_custom_scripts() {
+    
+    $plugin_path  = CTSC_PATH . '/js/';
+    if(CTSC_DEBUG){ctsc_debug_dump($plugin_path);}
+    if(CTSC_DEBUG){ctsc_debug_dump(CTSC_SCRIPTS);}
+    foreach(CTSC_SCRIPTS as $custom_script){
+        if(CTSC_DEBUG){ctsc_debug_dump($custom_script);}
+        wp_enqueue_script( 'ctsc_' . $custom_script , $plugin_path . $custom_script . '.js');
+    }
+}
+add_action( 'wp_enqueue_scripts', 'ctsc_enqueue_custom_scripts');
+
 /* #################### Custom Templates #################### */
 
 /*
 * CTSC_TEMPLATE_PATH
 * Path to custom templates from this plugin
 */
-define('CTSC_TEMPLATE_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) )  . '/templates/');
+define('CTSC_TEMPLATE_PATH', CTSC_PATH  . '/templates/');
 
 /*
 * Load Custom Crio Template Override
@@ -108,3 +141,10 @@ function ctsc_woo_custom_template( $template, $template_name, $template_path ) {
 
 // Filter for WooCommerce Template replacement
 add_filter( 'woocommerce_locate_template', 'ctsc_woo_custom_template', 1, 3 );
+
+/* #################### Custom Functions #################### */
+
+/*
+* Provided a functions.php file to align with child theme conventions
+*/
+require_once(CTSC_PATH . '/functions.php');
